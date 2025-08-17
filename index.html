@@ -11,14 +11,28 @@
       display:flex;
       justify-content:center;
       align-items:center;
-      background:#0b0d12;
+      background:#6b86ff;
       color:#fff;
       font-family: system-ui, sans-serif;
       text-align:center;
+      flex-direction:column;
     }
     .box {
       max-width: 400px;
       padding: 20px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      background: #0b0d12;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1a1f30;
     }
   </style>
 </head>
@@ -26,6 +40,29 @@
   <div class="box">
     <h1>hi. im zodiac.</h1>
     <p>i make games because yes. :p</p>
+    <button id="toggleMusic">Play Music</button>
   </div>
+
+  <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const btn = document.getElementById('toggleMusic');
+    const music = document.getElementById('bgMusic');
+    let playing = false;
+
+    btn.addEventListener('click', () => {
+      if (playing) {
+        music.pause();
+        btn.textContent = 'Play Music';
+      } else {
+        music.play();
+        btn.textContent = 'Pause Music';
+      }
+      playing = !playing;
+    });
+  </script>
 </body>
 </html>
