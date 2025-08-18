@@ -35,7 +35,7 @@
     .bars { position:absolute; inset:0; pointer-events:none; z-index:0; }
     .bar { position:absolute; width:4px; height:40px; background: rgba(107,134,255,0.8); animation: pulse 0.3s infinite ease-in-out alternate; }
     @keyframes pulse { from { transform: scaleY(0.3); opacity:0.6; } to { transform: scaleY(1.3); opacity:1; } }
-    
+
     .particle { position:absolute; width:6px; height:6px; background: rgba(255,255,255,0.6); border-radius:50%; animation: rise 4s linear infinite; }
     @keyframes rise { 0% { transform: translateY(0) scale(1); opacity:1; } 100% { transform: translateY(-200px) scale(0.2); opacity:0; } }
 
@@ -81,14 +81,12 @@
 
   <script>
     const bars = document.getElementById("bars");
-    const barCountPerSide = 100;
+    const barCountPerSide = 150;
 
-    // Top and bottom bars (vertical)
+    // Top and bottom bars (vertical only)
     for(let i=0;i<barCountPerSide;i++){
       let bTop = document.createElement("div");
       bTop.className = "bar";
-      bTop.style.width = '4px';
-      bTop.style.height = '40px';
       bTop.style.left = (i * (window.innerWidth / barCountPerSide)) + 'px';
       bTop.style.top = '0';
       bTop.style.animationDuration = (0.2+Math.random()*0.3)+'s';
@@ -96,33 +94,10 @@
 
       let bBottom = document.createElement("div");
       bBottom.className = "bar";
-      bBottom.style.width = '4px';
-      bBottom.style.height = '40px';
       bBottom.style.left = (i * (window.innerWidth / barCountPerSide)) + 'px';
       bBottom.style.bottom = '0';
       bBottom.style.animationDuration = (0.2+Math.random()*0.3)+'s';
       bars.appendChild(bBottom);
-    }
-
-    // Left and right bars (horizontal)
-    for(let i=0;i<barCountPerSide;i++){
-      let bLeft = document.createElement("div");
-      bLeft.className = "bar";
-      bLeft.style.width = '40px';
-      bLeft.style.height = '4px';
-      bLeft.style.left = '0';
-      bLeft.style.bottom = (i * (window.innerHeight / barCountPerSide)) + 'px';
-      bLeft.style.animationDuration = (0.2+Math.random()*0.3)+'s';
-      bars.appendChild(bLeft);
-
-      let bRight = document.createElement("div");
-      bRight.className = "bar";
-      bRight.style.width = '40px';
-      bRight.style.height = '4px';
-      bRight.style.right = '0';
-      bRight.style.bottom = (i * (window.innerHeight / barCountPerSide)) + 'px';
-      bRight.style.animationDuration = (0.2+Math.random()*0.3)+'s';
-      bars.appendChild(bRight);
     }
 
     // particles
