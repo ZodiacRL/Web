@@ -11,7 +11,7 @@
       display:flex;
       justify-content:center;
       align-items:center;
-      background: linear-gradient(-30deg, #1b1e2d, #2a3350); /* darker */
+      background: linear-gradient(-30deg, #2a3350, #6b86ff); /* lighter background */
       color:#fff;
       font-family: system-ui, sans-serif;
       text-align:center;
@@ -54,7 +54,7 @@
       padding: 40px;
       position: relative;
       z-index: 2;
-      margin-top: 40px; /* push down text */
+      margin-top: 80px; /* push text lower */
     }
 
     h1 {
@@ -89,10 +89,10 @@
     }
     .bar {
       position: absolute;
-      width: 4px;
-      height: 40px;
+      width: 6px;
       background: rgba(107,134,255,0.8);
-      animation: pulse 1s infinite ease-in-out alternate;
+      bottom: 0;
+      animation: pulse 0.3s infinite ease-in-out alternate;
     }
     @keyframes pulse {
       from { transform: scaleY(0.3); opacity: 0.6; }
@@ -106,7 +106,7 @@
       height: 6px;
       background: rgba(255,255,255,0.6);
       border-radius: 50%;
-      animation: rise 6s linear infinite;
+      animation: rise 4s linear infinite;
     }
     @keyframes rise {
       0% { transform: translateY(0) scale(1); opacity:1; }
@@ -133,18 +133,46 @@
   <div id="particles"></div>
 
   <script>
-    // generate bars along edges
+    // generate vertical bars from bottom, starting at borders
     const bars = document.getElementById("bars");
-    for (let i = 0; i < 40; i++) {
+    const barCountPerSide = 20;
+
+    function createBar(x, side) {
       let b = document.createElement("div");
       b.className = "bar";
-      let side = i % 4; // pick edge
-      if (side === 0) { b.style.left = (i*20%window.innerWidth)+"px"; b.style.top="0"; }
-      if (side === 1) { b.style.left = (i*20%window.innerWidth)+"px"; b.style.bottom="0"; }
-      if (side === 2) { b.style.top = (i*20%window.innerHeight)+"px"; b.style.left="0"; }
-      if (side === 3) { b.style.top = (i*20%window.innerHeight)+"px"; b.style.right="0"; }
-      b.style.animationDuration = (0.6+Math.random()*1.2)+"s";
+      b.style.left = x + 'px';
+      b.style.animationDuration = (0.2 + Math.random()*0.3) + 's';
+      if(side === 'top') b.style.bottom = 'auto';
       bars.appendChild(b);
+    }
+
+    // top and bottom bars
+    for(let i=0;i<barCountPerSide;i++){
+      let x = i * (window.innerWidth / barCountPerSide);
+      createBar(x,'top');
+      createBar(x,'bottom');
+    }
+
+    // left and right bars
+    for(let i=0;i<barCountPerSide;i++){
+      let x = i * (window.innerHeight / barCountPerSide);
+      let bLeft = document.createElement("div");
+      bLeft.className = "bar";
+      bLeft.style.width = '6px';
+      bLeft.style.height = '40px';
+      bLeft.style.left = '0';
+      bLeft.style.bottom = x + 'px';
+      bLeft.style.animationDuration = (0.2 + Math.random()*0.3) + 's';
+      bars.appendChild(bLeft);
+
+      let bRight = document.createElement("div");
+      bRight.className = "bar";
+      bRight.style.width = '6px';
+      bRight.style.height = '40px';
+      bRight.style.right = '0';
+      bRight.style.bottom = x + 'px';
+      bRight.style.animationDuration = (0.2 + Math.random()*0.3) + 's';
+      bars.appendChild(bRight);
     }
 
     // particles
@@ -154,11 +182,11 @@
       p.className = "particle";
       p.style.left = Math.random()*window.innerWidth+"px";
       p.style.top = window.innerHeight+"px";
-      p.style.animationDuration = (3+Math.random()*4)+"s";
+      p.style.animationDuration = (2+Math.random()*2)+"s";
       particles.appendChild(p);
-      setTimeout(()=>p.remove(), 6000);
+      setTimeout(()=>p.remove(), 4000);
     }
-    setInterval(spawnParticle, 300);
+    setInterval(spawnParticle, 150);
   </script>
 </body>
 </html>
