@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Zodiac._.</title>
 <style>
   body {
@@ -17,102 +17,208 @@
     text-align:center;
     flex-direction:column;
     overflow:hidden;
+    cursor:none;
+    transition: background 0.2s linear;
   }
 
-  /* Welcome overlay */
-  #welcome {
-    position:fixed;
-    inset:0;
-    background: rgba(107,134,255,0.9);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    z-index:10;
-    cursor:pointer;
+  .cursor {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #6b86ff;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: screen;
+    transition: transform 0.1s ease, opacity 0.2s ease;
+    z-index:999;
   }
-  #welcome div { font-size:2rem; margin-bottom:20px; }
-  #welcome span { display:block; margin:2px; font-size:1.5rem; opacity:0.8; }
 
-  /* Main content */
-  #main { display:none; flex-direction:column; justify-content:center; align-items:center; height:100%; text-align:center; color:#fff; }
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: 0.4;
+    mix-blend-mode: screen;
+  }
+  .glow1 { width: 500px; height: 500px; top: -150px; left: -150px; background: #6b86ff; }
+  .glow2 { width: 400px; height: 400px; bottom: -120px; right: -120px; background: #8fa1ff; }
+  .glow3 { width: 300px; height: 300px; top: 30%; left: 70%; background: #ffe066; }
+  .glow4 { width: 200px; height: 200px; bottom: 40%; left: 40%; background: #ff6b86; }
 
-  .glow { position:absolute; border-radius:50%; filter:blur(150px); opacity:0.4; animation: float 10s ease-in-out infinite alternate; mix-blend-mode:screen; }
-  .glow1 { width:500px;height:500px; top:-150px; left:-150px; background:#6b86ff; }
-  .glow2 { width:400px;height:400px; bottom:-120px; right:-120px; background:#8fa1ff; animation-delay:3s; }
-  .glow3 { width:300px;height:300px; top:30%; left:70%; background:#ffe066; animation-delay:5s; }
-  .glow4 { width:200px;height:200px; bottom:40%; left:40%; background:#ff6b86; animation-delay:7s; }
-  @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(60px,-60px); } }
+  .cube {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 620px;
+    height: 820px;
+    background: rgba(255,255,255,0.07);
+    border: 6px solid rgba(107,134,255,0.9);
+    box-shadow: 0 25px 70px rgba(0,0,0,0.7), 0 0 30px rgba(107,134,255,0.6);
+    border-radius: 20px;
+    z-index:1;
+    backdrop-filter: blur(4px);
+  }
 
-  .cube { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:620px; height:820px; background: rgba(255,255,255,0.07); border:6px solid rgba(107,134,255,0.9); box-shadow:0 25px 70px rgba(0,0,0,0.7),0 0 30px rgba(107,134,255,0.6); border-radius:20px; z-index:1; backdrop-filter: blur(4px); }
+  .box {
+    max-width:550px;
+    padding:50px;
+    position:relative;
+    z-index:2;
+    margin-top:100px;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(107,134,255,0.4);
+    border-radius: 16px;
+    box-shadow: 0 0 40px rgba(107,134,255,0.4);
+  }
 
-  .avatar { width:140px; height:140px; border-radius:20px; border:4px solid rgba(107,134,255,0.9); box-shadow:0 0 25px rgba(107,134,255,0.8),0 0 50px rgba(143,161,255,0.4); z-index:2; margin-bottom:20px; }
+  h1 { font-size:3rem; letter-spacing:3px; text-shadow: 0 0 20px rgba(107,134,255,0.8), 0 0 40px rgba(143,161,255,0.5); margin-top:20px; }
+  p { font-size:1.4rem; opacity:0.95; line-height:1.8; text-shadow: 0 0 10px rgba(107,134,255,0.5); }
+  .avatar { width:140px; height:140px; border-radius:20px; border:4px solid rgba(107,134,255,0.9); box-shadow: 0 0 25px rgba(107,134,255,0.8), 0 0 50px rgba(143,161,255,0.4); z-index:2; margin-bottom:20px; }
 
-  .box { max-width:550px; padding:50px; position:relative; z-index:2; margin-top:100px; background: rgba(255,255,255,0.05); border:2px solid rgba(107,134,255,0.4); border-radius:16px; box-shadow:0 0 40px rgba(107,134,255,0.4); }
-
-  h1 { font-size:3rem; letter-spacing:3px; text-shadow:0 0 20px rgba(107,134,255,0.8),0 0 40px rgba(143,161,255,0.5); margin-top:20px; }
-  p { font-size:1.4rem; opacity:0.95; line-height:1.8; text-shadow:0 0 10px rgba(107,134,255,0.5); }
+  .bars { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .bar { position:absolute; background: rgba(107,134,255,0.8); animation: pulse 0.25s infinite ease-in-out alternate; }
+  @keyframes pulse { from { transform: scaleY(0.3); opacity:0.5; } to { transform: scaleY(1.6); opacity:1; } }
 
   .particle { position:absolute; width:6px; height:6px; background: rgba(255,255,255,0.6); border-radius:50%; animation: rise 4s linear infinite; filter: drop-shadow(0 0 8px #6b86ff); }
   @keyframes rise { 0% { transform: translateY(0) scale(1); opacity:1; } 100% { transform: translateY(-300px) scale(0.2); opacity:0; } }
+
+  #overlay {
+    position: fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: rgba(107,134,255,0.9);
+    z-index:999;
+    flex-direction:column;
+    font-size: 2rem;
+    color: #fff;
+    cursor:pointer;
+    text-shadow: 0 0 10px #000;
+    letter-spacing: 2px;
+  }
 </style>
 </head>
 <body>
 
-<!-- Welcome overlay -->
-<div id="welcome">
-  <div>click to view</div>
-  <span>._.</span>
-  <span>:p</span>
-  <span>._.</span>
-  <span>:p</span>
-  <span>._.</span>
+<div id="overlay">
+  click to view
+  <div>._. :p ._. :p ._. :p ._. :p ._. :p</div>
 </div>
 
-<!-- Main content -->
-<div id="main">
-  <div class="glow glow1"></div>
-  <div class="glow glow2"></div>
-  <div class="glow glow3"></div>
-  <div class="glow glow4"></div>
+<div class="glow glow1"></div>
+<div class="glow glow2"></div>
+<div class="glow glow3"></div>
+<div class="glow glow4"></div>
 
-  <div class="cube"></div>
-  <img src="https://github.com/ZodiacRL/Web/blob/main/Avatar.png?raw=true" alt="Avatar" class="avatar">
-  <div class="box">
-    <h1>hi. im zodiac.</h1>
-    <p>i make games because yes. :p</p>
-  </div>
+<div class="cube"></div>
+<img src="https://github.com/ZodiacRL/Web/blob/main/Avatar.png?raw=true" alt="Avatar" class="avatar">
 
-  <div id="particles"></div>
+<div class="box">
+  <h1>hi. im zodiac.</h1>
+  <p>i make games because yes. :p</p>
 </div>
+
+<div class="bars" id="bars"></div>
+<div id="particles"></div>
 
 <audio id="bgMusic" loop src="https://github.com/ZodiacRL/Web/raw/refs/heads/main/739991_Creo---Sphere.mp3"></audio>
+<div class="cursor" id="cursor"></div>
 
 <script>
-  const welcome = document.getElementById('welcome');
-  const main = document.getElementById('main');
-  const bgMusic = document.getElementById('bgMusic');
-
-  // click to enter
-  welcome.addEventListener('click', () => {
-    welcome.style.display = 'none';
-    main.style.display = 'flex';
-    bgMusic.play();
+  // cursor follow
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
   });
 
-  // particles
-  const particles = document.getElementById("particles");
-  function spawnParticle(){
-    let p = document.createElement("div");
-    p.className = "particle";
-    p.style.left = Math.random()*window.innerWidth+'px';
-    p.style.top = window.innerHeight+'px';
-    p.style.animationDuration = (2+Math.random()*2)+'s';
-    particles.appendChild(p);
-    setTimeout(()=>p.remove(),4000);
-  }
-  setInterval(spawnParticle,100);
-</script>
+  const overlay = document.getElementById('overlay');
+  const bgMusic = document.getElementById('bgMusic');
 
+  overlay.addEventListener('click', ()=>{
+    overlay.style.display='none';
+    bgMusic.play();
+    initBars();
+    initParticles();
+    startAudioEffects();
+  });
+
+  function initBars(){
+    const bars = document.getElementById("bars");
+    const barCountPerSide = 150;
+    for(let i=0;i<barCountPerSide;i++){
+      let bTop = document.createElement("div");
+      bTop.className="bar";
+      bTop.style.width='4px';
+      bTop.style.height='50px';
+      bTop.style.left = (i * (window.innerWidth / barCountPerSide)) + 'px';
+      bTop.style.top='0';
+      bTop.style.animationDuration=(0.15+Math.random()*0.25)+'s';
+      bars.appendChild(bTop);
+
+      let bBottom = document.createElement("div");
+      bBottom.className="bar";
+      bBottom.style.width='4px';
+      bBottom.style.height='50px';
+      bBottom.style.left = (i * (window.innerWidth / barCountPerSide)) + 'px';
+      bBottom.style.bottom='0';
+      bBottom.style.animationDuration=(0.15+Math.random()*0.25)+'s';
+      bars.appendChild(bBottom);
+    }
+  }
+
+  function initParticles(){
+    const particles = document.getElementById("particles");
+    function spawnParticle(){
+      let p = document.createElement("div");
+      p.className="particle";
+      p.style.left=Math.random()*window.innerWidth+'px';
+      p.style.top=window.innerHeight+'px';
+      p.style.animationDuration=(2+Math.random()*2)+'s';
+      particles.appendChild(p);
+      setTimeout(()=>p.remove(),4000);
+    }
+    setInterval(spawnParticle,100);
+  }
+
+  // --- AUDIO REACTIVE EFFECTS ---
+  function startAudioEffects(){
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioCtx.createAnalyser();
+    const source = audioCtx.createMediaElementSource(bgMusic);
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    analyser.fftSize = 256;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const glows = document.querySelectorAll('.glow');
+
+    function animate(){
+      requestAnimationFrame(animate);
+      analyser.getByteFrequencyData(dataArray);
+
+      // intensidad promedio
+      let avg = dataArray.reduce((a,b)=>a+b)/dataArray.length;
+      let intensity = avg/255;
+
+      // glow se mueve y brilla según volumen
+      glows.forEach((g,i)=>{
+        let move = intensity*60;
+        g.style.transform = `translate(${Math.sin(Date.now()/500+i)*move}px, ${Math.cos(Date.now()/500+i)*move}px)`;
+        g.style.opacity = 0.3 + intensity*0.7;
+      });
+
+      // fondo se oscurece si bajo volumen
+      let darkFactor = 1 - intensity*0.5; // más bajo = más oscuro
+      document.body.style.background = `linear-gradient(135deg, rgba(42,51,80,${darkFactor}), rgba(107,134,255,${darkFactor}), rgba(143,161,255,${darkFactor}), rgba(30,37,64,${darkFactor}))`;
+    }
+
+    animate();
+  }
+</script>
 </body>
 </html>
