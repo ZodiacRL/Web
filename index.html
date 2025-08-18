@@ -18,7 +18,6 @@
     flex-direction:column;
     overflow:hidden;
     cursor:none;
-    transition: background 0.2s linear;
   }
 
   .cursor {
@@ -34,17 +33,46 @@
     z-index:999;
   }
 
+  #overlay {
+    position: fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: rgba(107,134,255,0.9);
+    z-index:999;
+    flex-direction:column;
+    font-size: 2rem;
+    color: #fff;
+    cursor:pointer;
+    text-align:center;
+  }
+
+  .overlay-text {
+    position: relative;
+    font-weight:bold;
+  }
+
+  .overlay-face {
+    position:absolute;
+    transform-origin: center;
+    font-size:1.5rem;
+  }
+
   .glow {
     position: absolute;
     border-radius: 50%;
     filter: blur(150px);
     opacity: 0.4;
+    animation: float 10s ease-in-out infinite alternate;
     mix-blend-mode: screen;
   }
   .glow1 { width: 500px; height: 500px; top: -150px; left: -150px; background: #6b86ff; }
   .glow2 { width: 400px; height: 400px; bottom: -120px; right: -120px; background: #8fa1ff; }
   .glow3 { width: 300px; height: 300px; top: 30%; left: 70%; background: #ffe066; }
   .glow4 { width: 200px; height: 200px; bottom: 40%; left: 40%; background: #ff6b86; }
+
+  @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(60px, -60px); } }
 
   .cube {
     position: absolute;
@@ -83,29 +111,12 @@
 
   .particle { position:absolute; width:6px; height:6px; background: rgba(255,255,255,0.6); border-radius:50%; animation: rise 4s linear infinite; filter: drop-shadow(0 0 8px #6b86ff); }
   @keyframes rise { 0% { transform: translateY(0) scale(1); opacity:1; } 100% { transform: translateY(-300px) scale(0.2); opacity:0; } }
-
-  #overlay {
-    position: fixed;
-    inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background: rgba(107,134,255,0.9);
-    z-index:999;
-    flex-direction:column;
-    font-size: 2rem;
-    color: #fff;
-    cursor:pointer;
-    text-shadow: 0 0 10px #000;
-    letter-spacing: 2px;
-  }
 </style>
 </head>
 <body>
 
 <div id="overlay">
-  click to view
-  <div>._. :p ._. :p ._. :p ._. :p ._. :p</div>
+  <div class="overlay-text">click to view</div>
 </div>
 
 <div class="glow glow1"></div>
@@ -128,97 +139,71 @@
 <div class="cursor" id="cursor"></div>
 
 <script>
-  // cursor follow
   const cursor = document.getElementById('cursor');
   document.addEventListener('mousemove', e => {
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
   });
 
+  // overlay con caritas alrededor
   const overlay = document.getElementById('overlay');
-  const bgMusic = document.getElementById('bgMusic');
+  const overlayText = overlay.querySelector('.overlay-text');
+  const faces = ['._.', ':p', '._.', ':p', '._.', ':p', '._.', ':p'];
+
+  faces.forEach((f, i)=>{
+    let span = document.createElement('div');
+    span.className='overlay-face';
+    span.innerText = f;
+    // posición radial alrededor del texto
+    const angle = (i/(faces.length))*Math.PI*2;
+    const radius = 80 + Math.random()*20;
+    const rotate = (Math.random()*60)-30; // -30 a +30 grados
+    span.style.left = `${50 + radius*Math.cos(angle)}%`;
+    span.style.top = `${50 + radius*Math.sin(angle)}%`;
+    span.style.transform = `translate(-50%,-50%) rotate(${rotate}deg)`;
+    overlay.appendChild(span);
+  });
 
   overlay.addEventListener('click', ()=>{
     overlay.style.display='none';
-    bgMusic.play();
-    initBars();
-    initParticles();
-    startAudioEffects();
+    document.getElementById('bgMusic').play();
   });
 
-  function initBars(){
-    const bars = document.getElementById("bars");
-    const barCountPerSide = 150;
-    for(let i=0;i<barCountPerSide;i++){
-      let bTop = document.createElement("div");
-      bTop.className="bar";
-      bTop.style.width='4px';
-      bTop.style.height='50px';
-      bTop.style.left = (i * (window.innerWidth / barCountPerSide)) + 'px';
-      bTop.style.top='0';
-      bTop.style.animationDuration=(0.15+Math.random()*0.25)+'s';
-      bars.appendChild(bTop);
+  // las barras y partículas como estaban
+  const bars = document.getElementById("bars");
+  const barCountPerSide = 200;
+  for(let i=0;i<barCountPerSide;i++){
+    let bTop = document.createElement("div");
+    bTop.className="bar";
+    bTop.style.width='4px';
+    bTop.style.height='50px';
+    bTop.style.left = (i * (window.innerWidth / barCountPerSide)) + 'px';
+    bTop.style.top='0';
+    bTop.style.animationDuration=(0.15+Math.random()*0.25)+'s';
+    bars.appendChild(bTop);
 
-      let bBottom = document.createElement("div");
-      bBottom.className="bar";
-      bBottom.style.width='4px';
-      bBottom.style.height='50px';
-      bBottom.style.left = (i * (window.innerWidth / barCountPerSide)) + 'px';
-      bBottom.style.bottom='0';
-      bBottom.style.animationDuration=(0.15+Math.random()*0.25)+'s';
-      bars.appendChild(bBottom);
-    }
+    let bBottom = document.createElement("div");
+    bBottom.className="bar";
+    bBottom.style.width='4px';
+    bBottom.style.height='50px';
+    bBottom.style.left = (i * (window.innerWidth / barCountPerSide)) + 'px';
+    bBottom.style.bottom='0';
+    bBottom.style.animationDuration=(0.15+Math.random()*0.25)+'s';
+    bars.appendChild(bBottom);
   }
 
-  function initParticles(){
-    const particles = document.getElementById("particles");
-    function spawnParticle(){
-      let p = document.createElement("div");
-      p.className="particle";
-      p.style.left=Math.random()*window.innerWidth+'px';
-      p.style.top=window.innerHeight+'px';
-      p.style.animationDuration=(2+Math.random()*2)+'s';
-      particles.appendChild(p);
-      setTimeout(()=>p.remove(),4000);
-    }
-    setInterval(spawnParticle,100);
+  // partículas
+  const particles = document.getElementById("particles");
+  function spawnParticle(){
+    let p = document.createElement("div");
+    p.className="particle";
+    p.style.left=Math.random()*window.innerWidth+'px';
+    p.style.top=window.innerHeight+'px';
+    p.style.animationDuration=(2+Math.random()*2)+'s';
+    particles.appendChild(p);
+    setTimeout(()=>p.remove(),4000);
   }
-
-  // --- AUDIO REACTIVE EFFECTS ---
-  function startAudioEffects(){
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const analyser = audioCtx.createAnalyser();
-    const source = audioCtx.createMediaElementSource(bgMusic);
-    source.connect(analyser);
-    analyser.connect(audioCtx.destination);
-    analyser.fftSize = 256;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
-    const glows = document.querySelectorAll('.glow');
-
-    function animate(){
-      requestAnimationFrame(animate);
-      analyser.getByteFrequencyData(dataArray);
-
-      // intensidad promedio
-      let avg = dataArray.reduce((a,b)=>a+b)/dataArray.length;
-      let intensity = avg/255;
-
-      // glow se mueve y brilla según volumen
-      glows.forEach((g,i)=>{
-        let move = intensity*60;
-        g.style.transform = `translate(${Math.sin(Date.now()/500+i)*move}px, ${Math.cos(Date.now()/500+i)*move}px)`;
-        g.style.opacity = 0.3 + intensity*0.7;
-      });
-
-      // fondo se oscurece si bajo volumen
-      let darkFactor = 1 - intensity*0.5; // más bajo = más oscuro
-      document.body.style.background = `linear-gradient(135deg, rgba(42,51,80,${darkFactor}), rgba(107,134,255,${darkFactor}), rgba(143,161,255,${darkFactor}), rgba(30,37,64,${darkFactor}))`;
-    }
-
-    animate();
-  }
+  setInterval(spawnParticle,100);
 </script>
 </body>
 </html>
