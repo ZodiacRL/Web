@@ -11,7 +11,7 @@
       display:flex;
       justify-content:center;
       align-items:center;
-      background: linear-gradient(-30deg, #2a3350, #6b86ff); /* lighter + gradient */
+      background: linear-gradient(-30deg, #1b1e2d, #2a3350); /* darker */
       color:#fff;
       font-family: system-ui, sans-serif;
       text-align:center;
@@ -19,38 +19,22 @@
       overflow:hidden;
     }
 
-    /* decorative floating lights */
+    /* glowing background */
     .glow {
       position: absolute;
       border-radius: 50%;
       filter: blur(120px);
-      opacity: 0.4;
+      opacity: 0.3;
       animation: float 12s ease-in-out infinite alternate;
     }
-    .glow1 {
-      width: 400px; height: 400px;
-      top: -100px; left: -100px;
-      background: #6b86ff;
-    }
-    .glow2 {
-      width: 300px; height: 300px;
-      bottom: -80px; right: -80px;
-      background: #8fa1ff;
-      animation-delay: 4s;
-    }
+    .glow1 { width: 400px; height: 400px; top: -100px; left: -100px; background: #6b86ff; }
+    .glow2 { width: 300px; height: 300px; bottom: -80px; right: -80px; background: #8fa1ff; animation-delay: 4s; }
     @keyframes float {
       0% { transform: translate(0,0); }
       100% { transform: translate(40px, -40px); }
     }
 
-    .box {
-      max-width: 500px;
-      padding: 40px;
-      position: relative;
-      z-index: 2;
-      backdrop-filter: blur(2px);
-    }
-
+    /* cube in the middle */
     .cube {
       position: absolute;
       top: 50%;
@@ -58,17 +42,26 @@
       transform: translate(-50%, -50%);
       width: 600px;
       height: 800px;
-      background: rgba(255, 255, 255, 0.06); /* transparent vertical cube */
-      border: 4px solid rgba(107, 134, 255, 0.8); /* thicker + clearer stroke */
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); /* stronger shadow */
+      background: rgba(255, 255, 255, 0.05);
+      border: 4px solid rgba(107, 134, 255, 0.8);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
       border-radius: 16px;
       z-index: 1;
+    }
+
+    .box {
+      max-width: 500px;
+      padding: 40px;
+      position: relative;
+      z-index: 2;
+      margin-top: 40px; /* push down text */
     }
 
     h1 {
       font-size: 2.5rem;
       letter-spacing: 2px;
       text-shadow: 0 0 15px rgba(107,134,255,0.8);
+      margin-top: 20px;
     }
 
     p {
@@ -76,15 +69,96 @@
       opacity: 0.9;
       line-height: 1.6;
     }
+
+    /* profile image */
+    .avatar {
+      width: 128px;
+      height: 128px;
+      border-radius: 16px;
+      border: 3px solid rgba(107,134,255,0.8);
+      box-shadow: 0 0 20px rgba(107,134,255,0.6);
+      z-index: 2;
+    }
+
+    /* fake audio visualizer bars */
+    .bars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bar {
+      position: absolute;
+      width: 4px;
+      height: 40px;
+      background: rgba(107,134,255,0.8);
+      animation: pulse 1s infinite ease-in-out alternate;
+    }
+    @keyframes pulse {
+      from { transform: scaleY(0.3); opacity: 0.6; }
+      to { transform: scaleY(1.3); opacity: 1; }
+    }
+
+    /* fading particles */
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 50%;
+      animation: rise 6s linear infinite;
+    }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(1); opacity:1; }
+      100% { transform: translateY(-200px) scale(0.2); opacity:0; }
+    }
   </style>
 </head>
 <body>
   <div class="glow glow1"></div>
   <div class="glow glow2"></div>
   <div class="cube"></div>
+
+  <img src="https://via.placeholder.com/128" alt="Avatar" class="avatar">
+
   <div class="box">
     <h1>hi. im zodiac.</h1>
     <p>i make games because yes. :p</p>
   </div>
+
+  <!-- visualizer bars -->
+  <div class="bars" id="bars"></div>
+
+  <!-- particles -->
+  <div id="particles"></div>
+
+  <script>
+    // generate bars along edges
+    const bars = document.getElementById("bars");
+    for (let i = 0; i < 40; i++) {
+      let b = document.createElement("div");
+      b.className = "bar";
+      let side = i % 4; // pick edge
+      if (side === 0) { b.style.left = (i*20%window.innerWidth)+"px"; b.style.top="0"; }
+      if (side === 1) { b.style.left = (i*20%window.innerWidth)+"px"; b.style.bottom="0"; }
+      if (side === 2) { b.style.top = (i*20%window.innerHeight)+"px"; b.style.left="0"; }
+      if (side === 3) { b.style.top = (i*20%window.innerHeight)+"px"; b.style.right="0"; }
+      b.style.animationDuration = (0.6+Math.random()*1.2)+"s";
+      bars.appendChild(b);
+    }
+
+    // particles
+    const particles = document.getElementById("particles");
+    function spawnParticle() {
+      let p = document.createElement("div");
+      p.className = "particle";
+      p.style.left = Math.random()*window.innerWidth+"px";
+      p.style.top = window.innerHeight+"px";
+      p.style.animationDuration = (3+Math.random()*4)+"s";
+      particles.appendChild(p);
+      setTimeout(()=>p.remove(), 6000);
+    }
+    setInterval(spawnParticle, 300);
+  </script>
 </body>
 </html>
