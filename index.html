@@ -5,17 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Zodiac._.</title>
 <style>
-  /* body + video */
-  body, html { margin:0; padding:0; height:100%; overflow:hidden; font-family: system-ui, sans-serif; }
-  #bgVideo { position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; }
-  
+  body, html { margin:0; padding:0; height:100%; overflow:hidden; font-family: system-ui, sans-serif; background: linear-gradient(135deg,#2a3350,#6b86ff,#8fa1ff,#1e2540); color:#fff; }
+
   /* welcome overlay */
   #welcome {
     position:fixed; inset:0;
     background: rgba(107,134,255,0.8);
     display:flex; justify-content:center; align-items:center;
-    color:#fff; font-size:2rem; flex-direction:column;
-    text-align:center; z-index:10; cursor:pointer;
+    flex-direction:column; text-align:center; z-index:10; cursor:pointer;
   }
   #welcome span { display:block; margin:5px; opacity:0.8; font-size:1.5rem; }
 
@@ -29,7 +26,7 @@
 
   /* glow elements */
   .glow { position:absolute; border-radius:50%; filter:blur(150px); opacity:0.4; mix-blend-mode:screen; }
-  
+
   /* cursor */
   #cursor {
     position:fixed; top:0; left:0;
@@ -44,10 +41,6 @@
 </style>
 </head>
 <body>
-
-<video id="bgVideo" autoplay muted loop>
-  <source src="https://youtu.be/wu0_CQM5Nr8" type="video/mp4">
-</video>
 
 <div id="welcome">
   <div>click to view</div>
@@ -98,8 +91,8 @@
   glows.forEach(glow=>{
     const dx = Math.random()*2-1;
     const dy = Math.random()*2-1;
-    let x = parseFloat(glow.style.left) || 0;
-    let y = parseFloat(glow.style.top) || 0;
+    let x = 0;
+    let y = 0;
     let anim = ()=> {
       x += dx;
       y += dy;
