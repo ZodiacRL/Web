@@ -11,7 +11,7 @@
       display:flex;
       justify-content:center;
       align-items:center;
-      background: linear-gradient(-30deg, #2a3350, #6b86ff); /* lighter background */
+      background: linear-gradient(-30deg, #2a3350, #6b86ff);
       color:#fff;
       font-family: system-ui, sans-serif;
       text-align:center;
@@ -19,99 +19,46 @@
       overflow:hidden;
     }
 
-    /* glowing background */
-    .glow {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.3;
-      animation: float 12s ease-in-out infinite alternate;
-    }
+    .glow { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.3; animation: float 12s ease-in-out infinite alternate; }
     .glow1 { width: 400px; height: 400px; top: -100px; left: -100px; background: #6b86ff; }
     .glow2 { width: 300px; height: 300px; bottom: -80px; right: -80px; background: #8fa1ff; animation-delay: 4s; }
-    @keyframes float {
-      0% { transform: translate(0,0); }
-      100% { transform: translate(40px, -40px); }
-    }
+    @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(40px, -40px); } }
 
-    /* cube in the middle */
-    .cube {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 600px;
-      height: 800px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 4px solid rgba(107, 134, 255, 0.8);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-      border-radius: 16px;
-      z-index: 1;
-    }
+    .cube { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 800px; background: rgba(255,255,255,0.05); border: 4px solid rgba(107,134,255,0.8); box-shadow:0 20px 50px rgba(0,0,0,0.6); border-radius:16px; z-index:1; }
 
-    .box {
-      max-width: 500px;
-      padding: 40px;
-      position: relative;
-      z-index: 2;
-      margin-top: 80px; /* push text lower */
-    }
+    .box { max-width:500px; padding:40px; position:relative; z-index:2; margin-top:80px; }
+    h1 { font-size:2.5rem; letter-spacing:2px; text-shadow:0 0 15px rgba(107,134,255,0.8); margin-top:20px; }
+    p { font-size:1.2rem; opacity:0.9; line-height:1.6; }
 
-    h1 {
-      font-size: 2.5rem;
-      letter-spacing: 2px;
-      text-shadow: 0 0 15px rgba(107,134,255,0.8);
-      margin-top: 20px;
-    }
+    .avatar { width:128px; height:128px; border-radius:16px; border:3px solid rgba(107,134,255,0.8); box-shadow:0 0 20px rgba(107,134,255,0.6); z-index:2; }
 
-    p {
-      font-size: 1.2rem;
-      opacity: 0.9;
-      line-height: 1.6;
-    }
+    .bars { position:absolute; inset:0; pointer-events:none; z-index:0; }
+    .bar { position:absolute; background: rgba(107,134,255,0.8); animation: pulse 0.3s infinite ease-in-out alternate; }
+    @keyframes pulse { from { transform: scaleY(0.3); opacity:0.6; } to { transform: scaleY(1.3); opacity:1; } }
 
-    /* profile image */
-    .avatar {
-      width: 128px;
-      height: 128px;
-      border-radius: 16px;
-      border: 3px solid rgba(107,134,255,0.8);
-      box-shadow: 0 0 20px rgba(107,134,255,0.6);
-      z-index: 2;
-    }
+    .particle { position:absolute; width:6px; height:6px; background: rgba(255,255,255,0.6); border-radius:50%; animation: rise 4s linear infinite; }
+    @keyframes rise { 0% { transform: translateY(0) scale(1); opacity:1; } 100% { transform: translateY(-200px) scale(0.2); opacity:0; } }
 
-    /* fake audio visualizer bars */
-    .bars {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .bar {
-      position: absolute;
-      width: 6px;
+    .music-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
       background: rgba(107,134,255,0.8);
-      bottom: 0;
-      animation: pulse 0.3s infinite ease-in-out alternate;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      font-size: 1rem;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 15px rgba(107,134,255,0.6);
+      transition: all 0.3s ease;
+      z-index:3;
     }
-    @keyframes pulse {
-      from { transform: scaleY(0.3); opacity: 0.6; }
-      to { transform: scaleY(1.3); opacity: 1; }
-    }
-
-    /* fading particles */
-    .particle {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      background: rgba(255,255,255,0.6);
-      border-radius: 50%;
-      animation: rise 4s linear infinite;
-    }
-    @keyframes rise {
-      0% { transform: translateY(0) scale(1); opacity:1; }
-      100% { transform: translateY(-200px) scale(0.2); opacity:0; }
-    }
+    .music-btn:hover { background: rgba(107,134,255,1); transform: scale(1.05); }
+    .music-emoji { font-size:1.2rem; color:#ffe066; }
   </style>
 </head>
 <body>
@@ -126,67 +73,81 @@
     <p>i make games because yes. :p</p>
   </div>
 
-  <!-- visualizer bars -->
   <div class="bars" id="bars"></div>
-
-  <!-- particles -->
   <div id="particles"></div>
 
+  <button class="music-btn" id="musicBtn"><span class="music-emoji">🔊</span> Music</button>
+  <audio id="bgMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
   <script>
-    // generate vertical bars from bottom, starting at borders
     const bars = document.getElementById("bars");
     const barCountPerSide = 20;
 
-    function createBar(x, side) {
-      let b = document.createElement("div");
-      b.className = "bar";
-      b.style.left = x + 'px';
-      b.style.animationDuration = (0.2 + Math.random()*0.3) + 's';
-      if(side === 'top') b.style.bottom = 'auto';
-      bars.appendChild(b);
+    // Top and bottom bars (vertical)
+    for(let i=0;i<barCountPerSide;i++){
+      let bTop = document.createElement("div");
+      bTop.className = "bar";
+      bTop.style.width = '4px';
+      bTop.style.height = '40px';
+      bTop.style.left = (i * (window.innerWidth / barCountPerSide)) + 'px';
+      bTop.style.top = '0';
+      bTop.style.animationDuration = (0.2+Math.random()*0.3)+'s';
+      bars.appendChild(bTop);
+
+      let bBottom = document.createElement("div");
+      bBottom.className = "bar";
+      bBottom.style.width = '4px';
+      bBottom.style.height = '40px';
+      bBottom.style.left = (i * (window.innerWidth / barCountPerSide)) + 'px';
+      bBottom.style.bottom = '0';
+      bBottom.style.animationDuration = (0.2+Math.random()*0.3)+'s';
+      bars.appendChild(bBottom);
     }
 
-    // top and bottom bars
+    // Left and right bars (horizontal)
     for(let i=0;i<barCountPerSide;i++){
-      let x = i * (window.innerWidth / barCountPerSide);
-      createBar(x,'top');
-      createBar(x,'bottom');
-    }
-
-    // left and right bars
-    for(let i=0;i<barCountPerSide;i++){
-      let x = i * (window.innerHeight / barCountPerSide);
       let bLeft = document.createElement("div");
       bLeft.className = "bar";
-      bLeft.style.width = '6px';
-      bLeft.style.height = '40px';
+      bLeft.style.width = '40px';
+      bLeft.style.height = '4px';
       bLeft.style.left = '0';
-      bLeft.style.bottom = x + 'px';
-      bLeft.style.animationDuration = (0.2 + Math.random()*0.3) + 's';
+      bLeft.style.bottom = (i * (window.innerHeight / barCountPerSide)) + 'px';
+      bLeft.style.animationDuration = (0.2+Math.random()*0.3)+'s';
       bars.appendChild(bLeft);
 
       let bRight = document.createElement("div");
       bRight.className = "bar";
-      bRight.style.width = '6px';
-      bRight.style.height = '40px';
+      bRight.style.width = '40px';
+      bRight.style.height = '4px';
       bRight.style.right = '0';
-      bRight.style.bottom = x + 'px';
-      bRight.style.animationDuration = (0.2 + Math.random()*0.3) + 's';
+      bRight.style.bottom = (i * (window.innerHeight / barCountPerSide)) + 'px';
+      bRight.style.animationDuration = (0.2+Math.random()*0.3)+'s';
       bars.appendChild(bRight);
     }
 
     // particles
     const particles = document.getElementById("particles");
-    function spawnParticle() {
+    function spawnParticle(){
       let p = document.createElement("div");
       p.className = "particle";
-      p.style.left = Math.random()*window.innerWidth+"px";
-      p.style.top = window.innerHeight+"px";
-      p.style.animationDuration = (2+Math.random()*2)+"s";
+      p.style.left = Math.random()*window.innerWidth+'px';
+      p.style.top = window.innerHeight+'px';
+      p.style.animationDuration = (2+Math.random()*2)+'s';
       particles.appendChild(p);
-      setTimeout(()=>p.remove(), 4000);
+      setTimeout(()=>p.remove(),4000);
     }
-    setInterval(spawnParticle, 150);
+    setInterval(spawnParticle,150);
+
+    // music toggle
+    const musicBtn = document.getElementById('musicBtn');
+    const bgMusic = document.getElementById('bgMusic');
+    musicBtn.addEventListener('click', ()=>{
+      if(bgMusic.paused){
+        bgMusic.play();
+      } else {
+        bgMusic.pause();
+      }
+    });
   </script>
 </body>
 </html>
